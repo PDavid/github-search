@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>GitHub Search</title>
+		<link rel="stylesheet" href="css/spacelab.bootstrap.min.css" />
+		<link href="css/main.css" media="all" rel="stylesheet" />
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+		<script src="app.js"></script>
+	</head>
+	<body ng-app="githubsearch" ng-controller="SearchController as searchCtrl">
+		<div class="container">
+			<h1>GitHub search</h1>
+			<div class="alert alert-danger" role="alert" ng-repeat="error in errors">
+				{{ error.message }}
+			</div>
+			<form role="form" ng-submit="executeSearch()">
+				<div id="searchbox" class="input-group col-sm-3">
+					<input type="text" class="form-control" ng-model="query" />
+					<span class="input-group-btn">
+						<input type="submit" class="btn btn-primary" value="Search" ng-disabled="!query"/>
+					</span>
+				</div>
+			</form>
+			<div class="row">
+				<div id="repolist" class="col-sm-3">
+					<ul class="nav nav-pills nav-stacked" ng-repeat="repo in repos" ng-click="openRepo(repo.full_name)">
+						<li ng-class="{active: activeRepo.id === repo.id }"><a href="#" title="{{repo.description}}">{{ repo.full_name }}</a></li>
+					</ul>
+				</div>
+				<div id="activerepo" ng-show="activeRepo" class="col-sm-6">
+					<p><strong><a href="{{ activeRepo.html_url }}">{{ activeRepo.full_name }}</a></strong>&nbsp;<em>Watched by {{ activeRepo.watchers_count }} people.</em></p>
+					<p>{{ activeRepo.description }}</p>
+					<pre>{{ activeRepo.readme }}</pre>
+				</div>
+				<div id="user" class="col-sm-3" ng-show="activeRepo">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="{{ user.html_url }}">
+								<img ng-src="{{ user.avatar_url }}" height="20" width="20"/>
+								<strong>{{ user.login }}</strong>
+							</a>
+						</div>
+						<div class="panel-body">
+							<div class="repo" ng-repeat="repo in user.repos" ng-click="openRepo(repo.full_name)">
+								<strong><a href="{{ repo.html_url }}">{{ repo.name }}</a></strong>
+								<p>{{ repo.description }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="container">
+				<p class="text-muted">Simple <a href="https://github.com/">GitHub</a> search made with <a href="https://angularjs.org/">AngularJS</a>.</p>
+			</div>
+    	</div>
+    </body>
+</html>
